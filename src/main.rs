@@ -98,7 +98,19 @@ impl Handler {
                     };
                     if message.timestamp <= threshold {
                         // Delete message
-                        message.delete(&http).await.expect("Error deleting message");
+                        match message.delete(&http).await {
+                            Ok(_) => {},
+                            Err(e) => {
+                                let link_str = get_link_to_msg(&message).map_or("".to_string(), |link| link);
+                                eprintln!("Error deleting message {link_str}: {}", e);
+                                // Re-insert message into queue
+                                let messages = messages.clone();
+                                {
+                                    let mut messages = messages.lock().await;
+                                    messages.insert(0, message);
+                                }
+                            }
+                        }
                         //println!("Del: {}", get_link_to_msg(&message).unwrap_or(message.content.to_string()));
                     } else {
                         panic!("Message was not ready to be processed but should have been ready");
