@@ -102,7 +102,7 @@ impl Handler {
                             Ok(_) => {},
                             Err(e) => {
                                 let link_str = get_link_to_msg(&message).map_or("".to_string(), |link| link);
-                                eprintln!("Error deleting message {link_str}: {}", e);
+                                eprintln!("Error deleting message {link_str}: {}. The message will be ignored.", e);
                                 // Re-insert message into queue
                                 let messages = messages.clone();
                                 {
