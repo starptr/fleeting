@@ -80,7 +80,7 @@ impl Handler {
                         messages.remove(0)
                     };
                     // Compute sleep duration
-                    let day = std::time::Duration::from_secs(60);
+                    let day = std::time::Duration::from_secs(60 * 60);
                     let sleep_duration = {
                         let timestamp = message.timestamp;
                         let target: DateTime<Utc> = serenity_ts_to_chrono_dt(timestamp) + day;
